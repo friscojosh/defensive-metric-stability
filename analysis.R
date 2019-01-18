@@ -67,7 +67,7 @@ all_epa_filtered <- all_epa %>%
 
 write_csv(all_epa_filtered, "data/defensive_pbp_09-18.csv")
 
-### Need to remove penalties and
+### Remove penalties and spikes and other non plays
 
 team_seasons_defense <- all_epa_filtered %>%
    filter(PlayType != "no_play",
@@ -128,6 +128,23 @@ fumbles_stability <- glance(fumbles_model) %>%
    mutate(metric = "Fumbles",
           r.squared = round(r.squared, 3)) %>%
    select(metric, r.squared)
+
+### This will go in the README as a visual --------------------------------------------------
+
+ggplot(data = fumbles_model, aes(x = fumble_lost.x, y = fumble_lost.y)) +
+   geom_point() +
+   geom_smooth(method = "lm") +
+   theme_bw() +
+   labs(x = "Year Y Total Fumbles Recovered",
+        y = "Year Y + 1 Total Fumbles Recovered",
+        title = "Fumbles, However, Are Not",
+        subtitle = paste("r-squared:", fumbles_stability$r.squared),
+        caption = "Source: NFL")
+
+### magic incantation to save the plot to disk ----------------------------------------------
+
+dev.copy(png,'fumbles.png')
+dev.off()
 
 ### Sacks -----------------------------------------------------------------------------------
 
