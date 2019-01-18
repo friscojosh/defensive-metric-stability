@@ -156,6 +156,23 @@ sacks_stability <- glance(sacks_model) %>%
           r.squared = round(r.squared, 3)) %>%
    select(metric, r.squared)
 
+### This will go in the README as a visual --------------------------------------------------
+
+ggplot(data = sacks_model, aes(x = sack.x, y = sack.y)) +
+   geom_point() +
+   geom_smooth(method = "lm") +
+   theme_bw() +
+   labs(x = "Year Y Sacks",
+        y = "Year Y + 1 Sacks",
+        title = "Sacks Also Are Random",
+        subtitle = paste("r-squared:", sacks_stability$r.squared),
+        caption = "Source: NFL")
+
+### magic incantation to save the plot to disk ----------------------------------------------
+
+dev.copy(png,'sacks.png')
+dev.off()
+
 ### Interceptions ---------------------------------------------------------------------------
 
 interception_model <- lm(data = team_defense_joined, interception.y ~ interception.x)
@@ -165,6 +182,23 @@ interception_stability <- glance(interception_model) %>%
    mutate(metric = "Interceptions",
           r.squared = round(r.squared, 3)) %>%
    select(metric, r.squared)
+
+### This will go in the README as a visual --------------------------------------------------
+
+ggplot(data = interception_model, aes(x = interception.x, y = interception.y)) +
+   geom_point() +
+   geom_smooth(method = "lm") +
+   theme_bw() +
+   labs(x = "Year Y Interceptions Created",
+        y = "Year Y + 1 Interceptions Created",
+        title = "Interceptions Are Like the Wind, Through My Trees",
+        subtitle = paste("r-squared:", interception_stability$r.squared),
+        caption = "Source: NFL")
+
+### magic incantation to save the plot to disk ----------------------------------------------
+
+dev.copy(png,'interceptions.png')
+dev.off()
 
 ### Bind up the results with some twine.
 
