@@ -208,3 +208,25 @@ defensive_metric_results <- qb_hits_stability %>%
              interception_stability)
 
 write_csv(defensive_metric_results, "results.csv")
+
+### What percentage of QB hits are sacks?
+
+hits_and_sacks <- all_epa_filtered %>%
+   filter(QBHit == 1) %>%
+   summarize(sack_pct = mean(Sack))
+
+### Which teams had the most hits on the QB in 2018?
+
+qb_hits_2018 <- all_epa_filtered %>%
+   filter(PlayType != "no_play",
+          spike == 0,
+          knee == 0,
+          Season == 2018) %>%
+   na.omit() %>%
+   group_by(DefensiveTeam, Season) %>%
+   summarize(qb_hit = sum(QBHit),
+             sack = sum(Sack),
+             expected_sacks = round(qb_hit * .435, 1)) %>%
+   arrange(-qb_hit)
+
+write_csv(qb_hits_2018, "expected_sacks.csv")
